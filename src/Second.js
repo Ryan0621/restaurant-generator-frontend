@@ -1,52 +1,10 @@
 import React, { Component } from 'react';
 import {
-  Form, Select, Button, Checkbox, Row, Col,
+  Form, Select, Checkbox, Row, Col,
 } from 'antd';
-import axios from 'axios';
 const { Option } = Select;
 
 class Second extends Component {
-
-  constructor(props) {
-      super(props);
-
-      this.initialState = {
-          cuisine_type: [],
-          outlet_type: [],
-          affordability_type: [],
-
-          cuisine_choice: [],
-          outlet_choice: [],
-          affordability_choice: [],
-          halal_choice: false,
-          vegan_choice: false,
-      };
-
-      this.state = this.initialState;
-  }
-
-  componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/cuisine_type/`)
-      .then(res => {
-        if(res.status === 200){
-            this.setState({cuisine_type: [...this.state.cuisine_type, ...res.data]});
-        }
-      })
-
-    axios.get(`http://127.0.0.1:8000/outlet_type/`)
-      .then(res => {
-        if(res.status === 200){
-            this.setState({outlet_type: [...this.state.outlet_type, ...res.data]});
-        }
-      })
-
-    axios.get(`http://127.0.0.1:8000/affordability/`)
-      .then(res => {
-        if(res.status === 200){
-            this.setState({affordability_type: [...this.state.affordability_type, ...res.data]});
-        }
-      })
-  }
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -64,7 +22,7 @@ class Second extends Component {
         'cuisine_type': item.props.value
       })
     })
-    this.setState({cuisine_choice: cuisine_choice})
+    this.props.handleChildrenChange('cuisine_choice', cuisine_choice)
   }
 
   handleOutletChange = (key, value) => {
@@ -74,17 +32,25 @@ class Second extends Component {
         'outlet_type': item.props.value
       })
     })
-    this.setState({outlet_choice: outlet_choice})
+    this.props.handleChildrenChange('outlet_choice', outlet_choice)
   }
 
   handleAffordabilityChange = (key, value) => {
     const affordability_choice = value.map(item => {
       return({
         'id': item.key,
-        'cuisine_type': item.props.value
+        'affordability_type': item.props.value
       })
     })
-    this.setState({affordability_choice: affordability_choice})
+    this.props.handleChildrenChange('affordability_choice', affordability_choice)
+  }
+
+  handleVeganChange = (value) => {
+    this.props.handleChildrenChange('vegan_choice', value.target.checked)
+  }
+
+  handleHalalChange = (value) => {
+    this.props.handleChildrenChange('halal_choice', value.target.checked)
   }
 
   render() {
@@ -106,7 +72,7 @@ class Second extends Component {
           onChange={this.handleCuisineChange}
         >
 
-        {this.state.cuisine_type.map(item => (<Option key={item.id} value={item.cuisine_type}>{item.cuisine_type}</Option>))}
+        {this.props.cuisine_type.map(item => (<Option key={item.id} value={item.cuisine_type}>{item.cuisine_type}</Option>))}
 
         </Select>
 
@@ -126,7 +92,7 @@ class Second extends Component {
           onChange={this.handleOutletChange}
         >
 
-        {this.state.outlet_type.map(item => (<Option key={item.id} value={item.outlet_type}>{item.outlet_type}</Option>))}
+        {this.props.outlet_type.map(item => (<Option key={item.id} value={item.outlet_type}>{item.outlet_type}</Option>))}
 
         </Select>
 
@@ -146,7 +112,7 @@ class Second extends Component {
           onChange={this.handleAffordabilityChange}
         >
 
-        {this.state.affordability_type.map(item => (<Option key={item.id} value={item.affordability}>{item.affordability}</Option>))}
+        {this.props.affordability_type.map(item => (<Option key={item.id} value={item.affordability}>{item.affordability}</Option>))}
 
         </Select>
 
@@ -156,8 +122,8 @@ class Second extends Component {
 
         <Checkbox.Group style={{ width: '100%' }}>
           <Row>
-            <Col span={8}><Checkbox value="Halal">Halal</Checkbox></Col>
-            <Col span={8}><Checkbox value="Vegan-friendly">Vegan-friendly</Checkbox></Col>
+            <Col span={8}><Checkbox value="Halal" onChange={this.handleHalalChange} checked={this.props.halal_choice}>Halal</Checkbox></Col>
+            <Col span={8}><Checkbox value="Vegan-friendly" onChange={this.handleVeganChange} checked={this.props.vegan_choice}>Vegan-friendly</Checkbox></Col>
           </Row>
         </Checkbox.Group>
 
@@ -167,9 +133,7 @@ class Second extends Component {
         <Form.Item
           wrapperCol={{ span: 12, offset: 5 }}
         >
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
+
         </Form.Item>
       </Form>
     );
