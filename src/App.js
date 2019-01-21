@@ -76,7 +76,7 @@ class App extends Component {
     let url = this.generateUrl()
     axios.get(url)
     .then(res => {
-      if(res.data.length!=0)
+      if(res.data.length!==0)
         this.setState({'generated_ls': [...res.data] })
       else this.setState({'is_empty': true })
 
