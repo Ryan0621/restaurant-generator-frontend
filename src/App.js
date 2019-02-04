@@ -28,7 +28,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get(`http://127.0.0.1:8000/cuisine_type/`)
+    axios.get(`http://restaurantgen.ryanchan.xyz/api/cuisine_type/`)
       .then(res => {
           this.setState({cuisine_type: [...res.data]});
       })
@@ -36,7 +36,7 @@ class App extends Component {
           this.setState({cuisine_type: []});
       })
 
-    axios.get(`http://127.0.0.1:8000/outlet_type/`)
+    axios.get(`http://restaurantgen.ryanchan.xyz/api/outlet_type/`)
       .then(res => {
           this.setState({outlet_type: [...res.data]});
       })
@@ -45,7 +45,7 @@ class App extends Component {
       })
 
 
-    axios.get(`http://127.0.0.1:8000/affordability/`)
+    axios.get(`http://restaurantgen.ryanchan.xyz/api/affordability/`)
       .then(res => {
           this.setState({affordability_type: [...res.data]});
       })
@@ -55,7 +55,7 @@ class App extends Component {
   }
 
   generateUrl(){
-    let url = 'http://127.0.0.1:8000/restaurant?'
+    let url = 'http://restaurantgen.ryanchan.xyz/api/restaurant?'
     let oc_str = this.state.outlet_choice.map(x =>'outlet_type=' + x.id)
     let cs_str = this.state.cuisine_choice.map(x => 'cuisine_type=' + x.id)
     let as_str = this.state.affordability_choice.map(x => 'affordability_type=' + x.id)
