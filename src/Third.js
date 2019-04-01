@@ -57,12 +57,23 @@ class Third extends Component {
     }
   }
 
+  generateOpeningTimes = () => {
+    var card = this.state.restaurant.opening_times.map((opening_times, index) => {
+
+      return (
+        <li key={index}> {opening_times.weekday_display} {opening_times.from_hour} - {opening_times.to_hour} </li>
+      )
+    })
+    return <ul style={{'listStyleType': 'none'}}> {card} </ul>
+  }
+
   render() {
+    //console.log(this.state.restaurant)
     const gridStyle = {
         width: '100%',
         textAlign: 'center',
     };
-    
+
     if(this.state.is_empty){
       return(
         <Card>
@@ -84,6 +95,7 @@ class Third extends Component {
             <Card.Grid style={gridStyle}><Icon type="shop" /> {this.state.restaurant.name}</Card.Grid>
             <Card.Grid style={gridStyle}><Icon type="environment" /> {this.state.restaurant.address.formatted}</Card.Grid>
             <Card.Grid style={gridStyle}><Icon type="tags" /> {this.state.restaurant.cuisine_type.cuisine_type} {this.state.restaurant.outlet_type.outlet_type}</Card.Grid>
+            <Card.Grid style={gridStyle}><Icon type="clock-circle" /> {this.generateOpeningTimes()}</Card.Grid>
             <Card.Grid style={gridStyle}><Icon type="dollar" /> {this.state.restaurant.affordability.affordability}</Card.Grid>
         </Card>
       )
